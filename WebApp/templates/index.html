@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}トイボックス{% endblock %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='javascript/ToyBox.js') }}"></script>
+
+<div class="container">
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button
+                    class="nav-link active"
+                    id="toybox-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#toybox"
+                    type="button"
+                    role="tab"
+                    aria-controls="toybox"
+                    aria-selected="true"
+            >
+                <img src="{{ url_for('static', filename='image/Icon4-512x512.png') }}" width="16" height="16">トイボックス
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button
+                    class="nav-link"
+                    id="assign-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#assign"
+                    type="button"
+                    role="tab"
+                    aria-controls="assign"
+                    aria-selected="false"
+            >
+                ユーザー登録／変更
+            </button>
+        </li>
+        {% if current_user.is_authenticated %}
+        <li class="nav-item" role="presentation">
+            <button
+                    class="nav-link"
+                    id="lopout-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#logout"
+                    type="button"
+                    role="tab"
+                    aria-controls="logout"
+                    aria-selected="false"
+            >
+                ログアウト
+            </button>
+        </li>
+        {% endif %}
+        <li class="nav-item" role="presentation">
+            <button
+                    class="nav-link"
+                    id="MagicObject-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#MagicObject"
+                    type="button"
+                    role="tab"
+                    aria-controls="MagicObject"
+                    aria-selected="false"
+            >
+                <img src="{{ url_for('static', filename='image/Icon3-512x512.png') }}" width="16" height="16">Magic Object
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div
+                class="tab-pane fade show active"
+                id="toybox"
+                role="tabpanel"
+                aria-labelledby="home-tab"
+        >
+            <form id="loginForm" action="/login" method="post">
+                <div class="box-color bg-opacity-50 bg-gradient rounded">
+                    <div class="m-3 p-2">
+                        <label for="loginNickName" class="form-label">ニックネーム</label>
+                        <input type="text" class="form-control bg-gray login-item" name="nickName" id="loginNickName" aria-describedby="loginNickNameHelp" required>
+                        <div id="loginNickNameHelp" class="form-text">日本語でもOK</div>
+                    </div>
+                    <div class="m-3 p-2">
+                        <label for="loginPassword" class="form-label">パスワード</label>
+                        <input type="password" class="form-control bg-gay login-item" name="password" id="loginPassword" aria-describedby="loginPasswordHelp" required>
+                        <div id="loginPasswordHelp" class="form-text">7文字以上</div>
+                    </div>
+                    {% if not current_user.is_authenticated and 'message' in session and session['message'] != '' %}
+                    <div class="m-3 p-2 alert alert-warning">
+                        {{ session['message'] }}
+                    </div>
+                    {% endif %}
+                    <button id="login-btn" type="submit" class="btn btn-success bg-opacity-50 my-3 mx-5" disabled>ログイン</button>
+                </div>
+            </form>
+            <div id="action-box" class="m-3 p-2 d-none">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-success">【一覧】</button>
+                    <button type="button" class="btn btn-success">【投稿】</button>
+                    <button type="button" class="btn btn-success">【Myポスト】</button>
+                </div>    </div>
+        </div>
+        <div
+                class="tab-pane fade"
+                id="assign"
+                role="tabpanel"
+                aria-labelledby="contact-tab"
+        >
+            <p>ユーザー登録／変更</p>
+            <form id="registerForm" action="/login" method="post">
+                <div class="box-color bg-opacity-50 bg-gradient rounded">
+                    <div class="m-3 p-2">
+                        <label for="nickName" class="form-label">ニックネーム</label>
+                        <input type="text" class="form-control bg-gray register-item" name="nickName" id="nickName" aria-describedby="nickNameHelp" required>
+                        <div id="nickNameHelp" class="form-text">日本語でもOK</div>
+                        <div class="invalid-feedback">
+                            短すぎるか重複しています。
+                        </div>
+                    </div>
+                    <div class="m-3 p-2">
+                        <label for="password" class="form-label">パスワード</label>
+                        <input type="password" class="form-control bg-gay register-item" name="password" id="password" aria-describedby="passwordHelp" required>
+                        <div id="passwordHelp" class="form-text">7文字以上</div>
+                        <div class="invalid-feedback">
+                            短すぎます。
+                        </div>
+                    </div>
+                    <div class="m-3 p-2">
+                        <label for="email" class="form-label">E-Mail</label>
+                        <input type="email" class="form-control bg-gay register-item" name="email" id="email" aria-describedby="emailHelp" required>
+                        <div id="emailHelp" class="form-text">xxxx@exmample.com</div>
+                        <div class="invalid-feedback">
+                            正しくないか重複しています。
+                        </div>
+                    </div>
+                    <div class="m-3 p-2">
+                        <label for="limit" class="form-label">有効期限</label>
+                        <select class="form-select" name="limit" id="limit" aria-label="有効期限">
+                            <option value="7">１週間</option>
+                            <option value="14">２週間</option>
+                            <option value="30" selected>３０日</option>
+                            <option value="60">６０日</option>
+                            <option value="90">９０日</option>
+                            <option value="180">１８０日</option>
+                        </select>
+                    </div>
+                    <button id="register-btn" type="button" class="btn btn-success bg-opacity-50 my-3 mx-5" disabled>登録</button>
+                    <div id="register-btn-spinner" class="spinner-border my-3 d-none" role="status">
+                        <span class="visually-hidden">保存中…</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% if current_user.is_authenticated %}
+        <div
+                class="tab-pane fade"
+                id="logout"
+                role="tabpanel"
+                aria-labelledby="profile-tab"
+        >
+            <form id="logoutForm" action="/logout" method="post">
+                <button id="liogout-btn" type="submit" class="btn btn-success bg-opacity-50 my-3 mx-5">ログアウト</button>
+            </form>
+        </div>
+        {% endif %}
+        <div
+                class="tab-pane fade"
+                id="MagicObject"
+                role="tabpanel"
+                aria-labelledby="profile-tab"
+        >
+            POWERED BY <a class="nav-link" aria-current="page" href="https://www.magic-object.page"><img src="{{ url_for('static', filename='image/Icon3-512x512.png') }}" width="16" height="16">Magic Object</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

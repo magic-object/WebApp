@@ -1,0 +1,64 @@
+{%- extends "base.html" %}
+{%- block title %}ウェブページをPNGに変換{%- endblock %}
+{%- block content %}
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='javascript/htmlToPNG.js') }}"></script>
+<div class="container">
+    <h1>URLを入力してください。</h1>
+    <div class="needs-validation" method="post" id="main_form" enctype="multipart/form-data">
+        <div class="mb-3">
+            <div class="input-group">
+                <span class="input-group-text">URL</span>
+                <input type="text" name="target_url" class="form-control input-control url-text has-validation" placeholder="https://www.example.com" aria-label="https://www.example.com" aria-describedby="basic-addon1" id="target_url" required>
+            </div>
+            <div class="input-group my-3">
+                <span class="input-group-text">幅を選択してください</span>
+                <select name="width" class="form-select form-control input-control" id="width">
+                    <option value="4096">4096</option>
+                    <option value="3840">3840</option>
+                    <option value="3200">3200</option>
+                    <option value="2880">2880</option>
+                    <option value="2560">2560</option>
+                    <option value="2304">2304</option>
+                    <option value="2048">2048</option>
+                    <option value="1920">1920</option>
+                    <option value="1680">1680</option>
+                    <option value="1920">1920</option>
+                    <option value="1600">1600</option>
+                    <option value="1440">1440</option>
+                    <option value="1366">1366</option>
+                    <option value="1280" selected>1280</option>
+                    <option value="1200">1200</option>
+                    <option value="1152">1152</option>
+                    <option value="1120">1120</option>
+                    <option value="1200">1200</option>
+                    <option value="1024">1024</option>
+                    <option value="960">960</option>
+                    <option value="832">832</option>
+                    <option value="800">800</option>
+                    <option value="768">768</option>
+                    <option value="720">720</option>
+                    <option value="640">640</option>
+                    <option value="480">480</option>
+                    <option value="400">400</option>
+                    <option value="352">352</option>
+                    <option value="320">320</option>
+                    <option value="256">256</option>
+                    <option value="240">240</option>
+                    <option value="176">176</option>
+                    <option value="160">160</option>
+                    <option value="128">128</option>
+                </select>
+                <span class="input-group-text">px</span>
+            </div>
+
+            <div class="input-group my-3">
+                <span class="input-group-text">この画像は5分で消滅します</span>
+                <button class="btn btn-secondary" id="cancel-btn">中止</button>
+                <button class="btn btn-primary input-control" id="register-btn" disabled>実行</button>
+            </div>
+        </div>
+    </div>
+    <img src="" id="image" class="img-fluid img-thumbnail">
+</div>
+{%- endblock %}
